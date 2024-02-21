@@ -4,13 +4,14 @@ import PropTypes from "prop-types";
 import { NumericFormat } from "react-number-format";
 
 const InputAmount = () => {
-  const [amount, setAmount] = useState(1320);
+  const [amount, setAmount] = useState(0);
 
   return (
     <Grid item>
       <TextField
         label="Amount"
         value={amount}
+        name="Amount"
         onChange={(event) => {
           setAmount(event.target.value);
         }}
