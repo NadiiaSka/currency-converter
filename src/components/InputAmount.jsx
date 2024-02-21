@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { NumericFormat } from "react-number-format";
 
 const InputAmount = () => {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(null);
 
   return (
     <Grid item>
