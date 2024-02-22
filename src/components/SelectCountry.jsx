@@ -7,7 +7,20 @@ const SelectCountry = () => {
         options={["USA", "Vietnam", "New Zealand"]}
         id="country"
         disableClearable
-        renderInput={(params) => <TextField {...params} label="to" />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="to"
+            InputProps={{
+              sx: {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderWidth: "1px",
+                  borderColor: "#333",
+                },
+              },
+            }}
+          />
+        )}
       />
     </Grid>
   );

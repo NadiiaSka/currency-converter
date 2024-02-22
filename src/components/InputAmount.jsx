@@ -18,6 +18,12 @@ const InputAmount = () => {
         fullWidth
         InputProps={{
           inputComponent: NumericFormatCustom,
+          sx: {
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderWidth: "1px",
+              borderColor: "#333",
+            },
+          },
         }}
       />
       {/* <TextField
