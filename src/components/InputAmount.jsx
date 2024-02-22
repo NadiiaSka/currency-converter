@@ -7,7 +7,7 @@ const InputAmount = () => {
   const [amount, setAmount] = useState(null);
 
   return (
-    <Grid item>
+    <Grid item xs={12} md>
       <TextField
         label="Amount"
         value={amount}
