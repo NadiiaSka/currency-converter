@@ -1,17 +1,18 @@
-import { Container, Typography, Grid, Box } from "@mui/material";
+import { Container, Typography, Grid, Box, Hidden } from "@mui/material";
 import InputAmount from "./components/InputAmount";
 import SelectCountry from "./components/SelectCountry";
 import SwitchCurrency from "./components/SwitchCurrency";
+import backgroundImage from "./assets/images/exchange.jpg";
 
 function App() {
   const boxStyles = {
-    backgroundColor: "#f0f0f0",
-    boxShadow: "0px 10px 15px 10px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "rgba(240, 240, 240, 0.8)",
+    boxShadow: "0px 10px 15px 10px rgba(0, 0, 0, 0.2)",
     borderRadius: "8px",
     padding: "3rem 2rem 4rem 2rem",
     textAlign: "center",
     color: "#222",
-    minHeight: "20rem",
+    minHeight: "10rem",
     position: "relative",
   };
   return (
@@ -27,6 +28,21 @@ function App() {
           <SelectCountry />
         </Grid>
       </Box>
+      <Hidden mdDown>
+        <Box
+          sx={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            position: "fixed",
+            bottom: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: -1,
+            right: "6%",
+          }}
+        />
+      </Hidden>
     </Container>
   );
 }
