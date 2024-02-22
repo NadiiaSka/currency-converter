@@ -28,7 +28,7 @@ function App() {
           <SelectCountry />
         </Grid>
       </Box>
-      <Hidden mdDown>
+      <Hidden smDown>
         <Box
           sx={{
             backgroundImage: `url(${backgroundImage})`,
@@ -39,7 +39,7 @@ function App() {
             width: "100%",
             height: "100%",
             zIndex: -1,
-            right: "6%",
+            right: 0,
           }}
         />
       </Hidden>
