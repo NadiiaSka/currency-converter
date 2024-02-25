@@ -1,12 +1,14 @@
-import { Autocomplete, Grid, Skeleton, TextField } from "@mui/material";
+import { Autocomplete, Box, Grid, Skeleton, TextField } from "@mui/material";
 import useAxios from "../hooks/useAxios";
-import CurrencyOption from "./CurrencyOption";
 import { useQuery } from "react-query";
 
 const fetchData = useAxios();
 
-const SelectCountry = () => {
-  const { data, isLoading, isError } = useQuery("dataKey", () =>
+const SelectCountry = (props) => {
+  const { value, setValue, label } = props;
+  //   const [data, loaded, error] = useAxios("https://restcountries.com/v3.1/all");
+
+  const { data, isLoading, isError } = useQuery("countries", () =>
     fetchData("https://restcountries.com/v3.1/all")
   );
 
@@ -18,44 +20,41 @@ const SelectCountry = () => {
     );
   }
   if (isError) {
-    return (
-      <Grid item xs={12} md={4}>
-        Something went wrong
-      </Grid>
-    );
+    return "Something went wrong!";
   }
 
-  const dataFilter = data.filter((country) => "currencies" in country);
-  // const dataCountries = dataFilter.map((country) => {
-  //   return `${country.flag} ${Object.keys(country.currencies)[0]} - ${
-  //     country.name.common
-  //   }`;
-  // });
-
-  const currencyOptions = dataFilter.map((country, index) => {
-    return {
-      id: index,
-      countryName: country.name.common,
-      currencyName: Object.keys(country.currencies)[0],
-      flagUrl: country.flags.png,
-    };
-  });
-
-  console.log(currencyOptions);
+  const dataFilter = data.filter((item) => "currencies" in item);
 
   return (
-    <Grid item xs={12} md={4}>
+    <Grid item xs={12} md={3}>
       <Autocomplete
-        value={currencyOptions[43]}
-        options={currencyOptions}
-        getOptionLabel={(option) => option.countryName}
+        value={value}
+        disableClearable
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+        options={dataFilter}
+        getOptionLabel={(option) => option.name.common}
         renderOption={(props, option) => (
-          <CurrencyOption key={option.id} {...option} />
+          <Box
+            component="li"
+            sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+            {...props}
+          >
+            <img
+              loading="lazy"
+              width="20"
+              srcSet={`https://flagcdn.com/w40/${option.altSpellings[0].toLowerCase()}.png 2x`}
+              src={`https://flagcdn.com/w20/${option.altSpellings[0].toLowerCase()}.png`}
+              alt=""
+            />
+            {Object.keys(option.currencies)[0]}- {option.name.common}
+          </Box>
         )}
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Select a country"
+            label={label}
             sx={{
               "& .MuiOutlinedInput-notchedOutline": {
                 borderWidth: "1px",
@@ -65,25 +64,6 @@ const SelectCountry = () => {
           />
         )}
       />
-      {/* <Autocomplete
-        options={currencyOptions}
-        disableClearable
-        getOptionLabel={(option) => option.countryName}
-        renderOption={(option) => currencyOption(option)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            sx={{
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderWidth: "1px",
-                borderColor: "#333",
-              },
-            }}
-            placeholder="Select a country"
-          />
-        )}
-      /> */}
     </Grid>
   );
 };

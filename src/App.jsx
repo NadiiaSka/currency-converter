@@ -3,18 +3,12 @@ import InputAmount from "./components/InputAmount";
 import SelectCountry from "./components/SelectCountry";
 import SwitchCurrency from "./components/SwitchCurrency";
 import backgroundImage from "./assets/images/exchange.jpg";
+import { useState } from "react";
 
 function App() {
-  const boxStyles = {
-    backgroundColor: "rgba(240, 240, 240, 0.85)",
-    boxShadow: "0px 10px 15px 10px rgba(0, 0, 0, 0.2)",
-    borderRadius: "8px",
-    padding: "3rem 2rem 4rem 2rem",
-    textAlign: "center",
-    color: "#222",
-    minHeight: "10rem",
-    position: "relative",
-  };
+  const [fromCurrency, setFromCurrency] = useState(null);
+  const [toCurrency, setToCurrency] = useState(null);
+
   return (
     <Container maxWidth="md">
       <Box sx={boxStyles}>
@@ -23,9 +17,17 @@ function App() {
         </Typography>
         <Grid container spacing={2}>
           <InputAmount />
-          <SelectCountry />
+          <SelectCountry
+            value={fromCurrency}
+            setValue={setFromCurrency}
+            label="from"
+          />
           <SwitchCurrency />
-          <SelectCountry />
+          <SelectCountry
+            value={toCurrency}
+            setValue={setToCurrency}
+            label="to"
+          />
         </Grid>
       </Box>
       <Hidden smDown>
@@ -46,5 +48,16 @@ function App() {
     </Container>
   );
 }
+
+const boxStyles = {
+  backgroundColor: "rgba(240, 240, 240, 0.85)",
+  boxShadow: "0px 10px 15px 10px rgba(0, 0, 0, 0.2)",
+  borderRadius: "8px",
+  padding: "3rem 2rem 4rem 2rem",
+  textAlign: "center",
+  color: "#222",
+  minHeight: "10rem",
+  position: "relative",
+};
 
 export default App;
