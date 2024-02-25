@@ -24,7 +24,7 @@ const SelectCountry = () => {
   console.log(currencyOptions);
 
   return (
-    <Grid item xs={12} md={3}>
+    <Grid item xs={12} md={4}>
       <Autocomplete
         options={currencyOptions}
         getOptionLabel={(option) => option.countryName}

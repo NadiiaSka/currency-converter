@@ -27,10 +27,10 @@ const CurrencyOption = ({ countryName, currencyName, flagUrl }) => (
           width: 24,
           height: 24,
           borderRadius: "50%",
-          marginRight: 7,
+          marginRight: 3,
         }}
       />
-      <span style={{ marginLeft: 15 }}>
+      <span style={{ marginLeft: 5, fontSize: "14px" }}>
         {currencyName} - {countryName}
       </span>
     </Grid>
