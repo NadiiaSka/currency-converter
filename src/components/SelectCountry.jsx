@@ -2,11 +2,9 @@ import { Autocomplete, Box, Grid, Skeleton, TextField } from "@mui/material";
 import useAxios from "../hooks/useAxios";
 import { useQuery } from "react-query";
 
-const fetchData = useAxios();
-
 const SelectCountry = (props) => {
   const { value, setValue, label } = props;
-  //   const [data, loaded, error] = useAxios("https://restcountries.com/v3.1/all");
+  const fetchData = useAxios();
 
   const { data, isLoading, isError } = useQuery("countries", () =>
     fetchData("https://restcountries.com/v3.1/all")
@@ -26,7 +24,7 @@ const SelectCountry = (props) => {
   const dataFilter = data.filter((item) => "currencies" in item);
 
   return (
-    <Grid item xs={12} md={3}>
+    <Grid item xs={12} md={4}>
       <Autocomplete
         value={value}
         disableClearable
@@ -36,7 +34,7 @@ const SelectCountry = (props) => {
         options={dataFilter}
         getOptionLabel={(option) => option.name.common}
         renderOption={(props, option) => {
-          if (option.altSpellings[0].length <= 2) {
+          if (option.altSpellings[0] && option.altSpellings[0].length <= 2) {
             return (
               <Box
                 component="li"
