@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 
 const useAxios = () => {
   const fetchData = async (url) => {
