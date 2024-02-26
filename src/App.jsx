@@ -3,11 +3,12 @@ import InputAmount from "./components/InputAmount";
 import SelectCountry from "./components/SelectCountry";
 import SwitchCurrency from "./components/SwitchCurrency";
 import backgroundImage from "./assets/images/exchange.jpg";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { CurrencyContext } from "./context/CurrencyContext";
 
 function App() {
-  const [fromCurrency, setFromCurrency] = useState(null);
-  const [toCurrency, setToCurrency] = useState(null);
+  const { fromCurrency, setFromCurrency, toCurrency, setToCurrency } =
+    useContext(CurrencyContext);
 
   return (
     <Container maxWidth="md">
