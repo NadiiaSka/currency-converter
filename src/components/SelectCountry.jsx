@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Grid, Skeleton, TextField } from "@mui/material";
+import { Autocomplete, Box, Grid, TextField } from "@mui/material";
 import useAxios from "../hooks/useAxios";
 import { useQuery } from "react-query";
 
@@ -11,11 +11,7 @@ const SelectCountry = (props) => {
   );
 
   if (isLoading) {
-    return (
-      <Grid item xs={12} md={3}>
-        <Skeleton variant="rounded" height={60} />
-      </Grid>
-    );
+    return <Grid item xs={12} md={3}></Grid>;
   }
   if (isError) {
     return "Something went wrong!";
@@ -26,7 +22,12 @@ const SelectCountry = (props) => {
   return (
     <Grid item xs={12} md={4}>
       <Autocomplete
-        value={value}
+        value={
+          value &&
+          dataFilter.some((option) => option.name.common === value.name.common)
+            ? value
+            : null
+        }
         disableClearable
         onChange={(event, newValue) => {
           setValue(newValue);
@@ -56,7 +57,25 @@ const SelectCountry = (props) => {
         renderInput={(params) => (
           <TextField
             {...params}
+            value={
+              value
+                ? `${Object.keys(value.currencies)[0]} - ${value.name.common}`
+                : ""
+            }
             label={label}
+            InputProps={{
+              ...params.InputProps,
+              startAdornment: value ? (
+                <img
+                  loading="lazy"
+                  width="20"
+                  srcSet={`https://flagcdn.com/w40/${value.altSpellings[0].toLowerCase()}.png 2x`}
+                  src={`https://flagcdn.com/w20/${value.altSpellings[0].toLowerCase()}.png`}
+                  alt=""
+                  style={{ marginRight: "8px" }}
+                />
+              ) : null,
+            }}
             sx={{
               "& .MuiOutlinedInput-notchedOutline": {
                 borderWidth: "1px",
