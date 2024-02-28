@@ -1,19 +1,21 @@
 import { Grid, InputAdornment, TextField } from "@mui/material";
-import { forwardRef, useState } from "react";
+import { forwardRef, useContext, useState } from "react";
 import PropTypes from "prop-types";
 import { NumericFormat } from "react-number-format";
+import { CurrencyContext } from "../context/CurrencyContext";
 
 const InputAmount = () => {
   const [amount, setAmount] = useState(null);
+  const { firstAmount, setFirstAmount } = useContext(CurrencyContext);
 
   return (
     <Grid item xs={12} md>
       <TextField
         label="Amount"
-        value={amount}
+        value={firstAmount}
         name="Amount"
         onChange={(event) => {
-          setAmount(event.target.value);
+          setFirstAmount(event.target.value);
         }}
         fullWidth
         InputProps={{

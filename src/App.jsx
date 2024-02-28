@@ -3,12 +3,49 @@ import InputAmount from "./components/InputAmount";
 import SelectCountry from "./components/SelectCountry";
 import SwitchCurrency from "./components/SwitchCurrency";
 import backgroundImage from "./assets/images/exchange.jpg";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CurrencyContext } from "./context/CurrencyContext";
+import axios from "axios";
 
 function App() {
-  const { fromCurrency, setFromCurrency, toCurrency, setToCurrency } =
-    useContext(CurrencyContext);
+  const {
+    fromCurrency,
+    setFromCurrency,
+    toCurrency,
+    setToCurrency,
+    firstAmount,
+    setFirstAmount,
+  } = useContext(CurrencyContext);
+
+  const [resultCurrency, setResultCurrency] = useState(null);
+  const codeFromCurrency = fromCurrency
+    ? Object.keys(fromCurrency.currencies)[0]
+    : "USD";
+  const codeToCurrency = toCurrency
+    ? Object.keys(toCurrency.currencies)[0]
+    : "GB";
+  console.log(resultCurrency);
+
+  useEffect(() => {
+    if (firstAmount) {
+      axios("https://api.freecurrencyapi.com/v1/latest", {
+        params: {
+          apikey: "fca_live_njDVy9gTFUx87AMVh7q8Ar6whfSRusOPsmJstbmz",
+          base_currency: codeFromCurrency,
+          currencies: codeToCurrency,
+        },
+      })
+        .then((response) => {
+          const rate = response.data.data[codeToCurrency];
+          const convertedAmountRounded =
+            Math.round(rate * firstAmount * 100) / 100;
+          setResultCurrency(convertedAmountRounded);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [firstAmount, codeFromCurrency, codeToCurrency]);
 
   return (
     <Container maxWidth="md">
@@ -30,7 +67,20 @@ function App() {
             label="to"
           />
         </Grid>
+        {firstAmount ? (
+          <Box sx={{ textAlign: "left" }}>
+            <Typography variant="h6" sx={{ marginTop: "2rem" }}>
+              {firstAmount} {codeFromCurrency} =
+            </Typography>
+            <Typography variant="h4">
+              {resultCurrency} {codeToCurrency}
+            </Typography>
+          </Box>
+        ) : (
+          ""
+        )}
       </Box>
+
       <Hidden smDown>
         <Box
           sx={{
