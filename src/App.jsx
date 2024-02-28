@@ -69,7 +69,7 @@ function App() {
         </Grid>
         {firstAmount ? (
           <Box sx={{ textAlign: "left" }}>
-            <Typography variant="h6" sx={{ marginTop: "2rem" }}>
+            <Typography variant="h6" sx={{ marginTop: "1rem" }}>
               {firstAmount} {codeFromCurrency} =
             </Typography>
             <Typography variant="h4">
@@ -81,21 +81,19 @@ function App() {
         )}
       </Box>
 
-      <Hidden smDown>
-        <Box
-          sx={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            position: "fixed",
-            bottom: 0,
-            width: "100%",
-            height: "100%",
-            zIndex: -1,
-            right: 0,
-          }}
-        />
-      </Hidden>
+      <Box
+        sx={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          position: "fixed",
+          bottom: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: -1,
+          right: 0,
+        }}
+      />
     </Container>
   );
 }
