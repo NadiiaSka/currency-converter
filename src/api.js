@@ -5,17 +5,17 @@ export const fetchCurrencyConversion = async (
   codeToCurrency,
   firstAmount
 ) => {
-  const response = await axios.get(
-    "https://api.freecurrencyapi.com/v1/latest",
-    {
-      params: {
-        apikey: "fca_live_njDVy9gTFUx87AMVh7q8Ar6whfSRusOPsmJstbmz",
-        base_currency: codeFromCurrency,
-        currencies: codeToCurrency,
-      },
-    }
-  );
-  const rate = response.data.data[codeToCurrency];
-  const convertedAmountRounded = Math.round(rate * firstAmount * 100) / 100;
+  const response = await axios.get("https://api.fxratesapi.com/latest", {
+    params: {
+      amount: firstAmount,
+      base: codeFromCurrency,
+      currencies: codeToCurrency,
+      resolution: "1m",
+      places: 6,
+      format: "json",
+    },
+  });
+  const rate = response.data.rates[codeToCurrency];
+  const convertedAmountRounded = Math.round(rate * 100) / 100;
   return convertedAmountRounded;
 };
