@@ -15,7 +15,7 @@ export const fetchCurrencyConversion = async (
       format: "json",
     },
   });
-  const rate = response.data.rates[codeToCurrency];
-  const convertedAmountRounded = Math.round(rate * 100) / 100;
+  const convertedAmount = response.data.rates[codeToCurrency];
+  const convertedAmountRounded = Math.round(convertedAmount * 100) / 100;
   return convertedAmountRounded;
 };
