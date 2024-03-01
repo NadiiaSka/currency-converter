@@ -1,11 +1,12 @@
-import { Container, Typography, Grid, Box, Hidden } from "@mui/material";
+import { Container, Typography, Grid, Box } from "@mui/material";
 import InputAmount from "./components/InputAmount";
 import SelectCountry from "./components/SelectCountry";
 import SwitchCurrency from "./components/SwitchCurrency";
 import backgroundImage from "./assets/images/exchange.jpg";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { CurrencyContext } from "./context/CurrencyContext";
-import axios from "axios";
+import { useQuery } from "react-query";
+import { fetchCurrencyConversion } from "./api";
 
 function App() {
   const {
@@ -14,38 +15,24 @@ function App() {
     toCurrency,
     setToCurrency,
     firstAmount,
-    setFirstAmount,
   } = useContext(CurrencyContext);
 
-  const [resultCurrency, setResultCurrency] = useState(null);
   const codeFromCurrency = fromCurrency
     ? Object.keys(fromCurrency.currencies)[0]
-    : "USD";
+    : null;
   const codeToCurrency = toCurrency
     ? Object.keys(toCurrency.currencies)[0]
-    : "GB";
-  console.log(resultCurrency);
+    : null;
 
-  useEffect(() => {
-    if (firstAmount) {
-      axios("https://api.freecurrencyapi.com/v1/latest", {
-        params: {
-          apikey: "fca_live_njDVy9gTFUx87AMVh7q8Ar6whfSRusOPsmJstbmz",
-          base_currency: codeFromCurrency,
-          currencies: codeToCurrency,
-        },
-      })
-        .then((response) => {
-          const rate = response.data.data[codeToCurrency];
-          const convertedAmountRounded =
-            Math.round(rate * firstAmount * 100) / 100;
-          setResultCurrency(convertedAmountRounded);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [firstAmount, codeFromCurrency, codeToCurrency]);
+  const shouldFetchData = codeFromCurrency && codeToCurrency && firstAmount;
+
+  const { data: resultCurrency } = useQuery(
+    ["currencyConversion", codeFromCurrency, codeToCurrency, firstAmount],
+    () =>
+      shouldFetchData
+        ? fetchCurrencyConversion(codeFromCurrency, codeToCurrency, firstAmount)
+        : Promise.resolve(null)
+  );
 
   return (
     <Container maxWidth="md">
@@ -67,7 +54,7 @@ function App() {
             label="to"
           />
         </Grid>
-        {firstAmount ? (
+        {resultCurrency ? (
           <Box sx={{ textAlign: "left" }}>
             <Typography variant="h6" sx={{ marginTop: "1rem" }}>
               {firstAmount} {codeFromCurrency} =
