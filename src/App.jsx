@@ -54,14 +54,16 @@ function App() {
             label="to"
           />
         </Grid>
-        {resultCurrency ? (
+        {firstAmount ? (
           <Box sx={{ textAlign: "left" }}>
             <Typography variant="h6" sx={{ marginTop: "1rem" }}>
-              {firstAmount} {codeFromCurrency} =
+              {Number(firstAmount).toLocaleString()} {codeFromCurrency} =
             </Typography>
-            <Typography variant="h4">
-              {resultCurrency} {codeToCurrency}
-            </Typography>
+            {resultCurrency && (
+              <Typography variant="h4">
+                {Number(resultCurrency).toLocaleString()} {codeToCurrency}
+              </Typography>
+            )}
           </Box>
         ) : (
           ""

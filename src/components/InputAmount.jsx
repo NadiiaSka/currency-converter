@@ -1,11 +1,10 @@
-import { Grid, InputAdornment, TextField } from "@mui/material";
-import { forwardRef, useContext, useState } from "react";
+import { Grid, TextField } from "@mui/material";
+import { forwardRef, useContext } from "react";
 import PropTypes from "prop-types";
 import { NumericFormat } from "react-number-format";
 import { CurrencyContext } from "../context/CurrencyContext";
 
 const InputAmount = () => {
-  const [amount, setAmount] = useState(null);
   const { firstAmount, setFirstAmount } = useContext(CurrencyContext);
 
   return (
@@ -28,17 +27,6 @@ const InputAmount = () => {
           },
         }}
       />
-      {/* <TextField
-        label="react-number-format"
-        value={values.numberformat}
-        onChange={handleChange}
-        name="numberformat"
-        id="formatted-numberformat-input"
-        InputProps={{
-          inputComponent: NumericFormatCustom,
-        }}
-        variant="standard"
-      /> */}
     </Grid>
   );
 };
@@ -63,7 +51,6 @@ const NumericFormatCustom = forwardRef(function NumericFormatCustom(
       }}
       thousandSeparator
       valueIsNumericString
-      prefix="$"
     />
   );
 });
