@@ -55,12 +55,17 @@ function App() {
           />
         </Grid>
         {firstAmount ? (
-          <Box sx={{ textAlign: "left" }}>
-            <Typography variant="h6" sx={{ marginTop: "1rem" }}>
+          <Box
+            sx={{ display: "flex", alignItems: "center", marginTop: "1rem" }}
+          >
+            <Typography variant="h5">
               {Number(firstAmount).toLocaleString()} {codeFromCurrency} =
             </Typography>
             {resultCurrency && (
-              <Typography variant="h4">
+              <Typography
+                variant="h5"
+                sx={{ marginLeft: "0.5rem", fontWeight: 600 }}
+              >
                 {Number(resultCurrency).toLocaleString()} {codeToCurrency}
               </Typography>
             )}

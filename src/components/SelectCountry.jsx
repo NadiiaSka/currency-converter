@@ -17,7 +17,30 @@ const SelectCountry = (props) => {
   }, []);
 
   const { data, isLoading, isError } = useQuery("countries", () =>
-    fetchData("https://restcountries.com/v3.1/all")
+    fetchData("https://restcountries.com/v3.1/all").then((data) => {
+      // Sort the list of countries to display the commonly used ones first
+      data.sort((a, b) => {
+        const order = {
+          "United States": 1,
+          "United Kingdom": 2,
+          "New Zealand": 3,
+        };
+
+        // Compare countries based on their order
+        const orderA = order[a.name.common] || Infinity;
+        const orderB = order[b.name.common] || Infinity;
+
+        // Sort countries based on their order
+        if (orderA !== orderB) {
+          return orderA - orderB;
+        } else {
+          // If countries have the same order, sort them alphabetically
+          return a.name.common.localeCompare(b.name.common);
+        }
+      });
+
+      return data;
+    })
   );
 
   useEffect(() => {
