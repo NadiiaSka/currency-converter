@@ -73,6 +73,9 @@ const SelectCountry = (props) => {
         }}
         options={dataFilter}
         getOptionLabel={(option) => option.name.common}
+        isOptionEqualToValue={(option, value) =>
+          option.name.common === value.name.common
+        }
         renderOption={(props, option) => {
           if (option.altSpellings[0] && option.altSpellings[0].length <= 2) {
             return (
@@ -84,8 +87,8 @@ const SelectCountry = (props) => {
                 <img
                   loading="lazy"
                   width="20"
-                  srcSet={`https://flagcdn.com/w40/${option.altSpellings[0].toLowerCase()}.png 2x`}
-                  src={`https://flagcdn.com/w20/${option.altSpellings[0].toLowerCase()}.png`}
+                  srcSet={option.flags.png}
+                  src={option.flags.png}
                   alt=""
                 />
                 {Object.keys(option.currencies)[0]} - {option.name.common}
@@ -108,8 +111,8 @@ const SelectCountry = (props) => {
                 <img
                   loading="lazy"
                   width="20"
-                  srcSet={`https://flagcdn.com/w40/${value.altSpellings[0].toLowerCase()}.png 2x`}
-                  src={`https://flagcdn.com/w20/${value.altSpellings[0].toLowerCase()}.png`}
+                  srcSet={value.flags.png}
+                  src={value.flags.png}
                   alt=""
                   style={{ marginRight: "8px" }}
                 />
