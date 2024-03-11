@@ -1,9 +1,15 @@
-import { Container, Typography, Grid, Box } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Grid,
+  Box,
+  formGroupClasses,
+} from "@mui/material";
 import InputAmount from "./components/InputAmount";
 import SelectCountry from "./components/SelectCountry";
 import SwitchCurrency from "./components/SwitchCurrency";
 import backgroundImage from "./assets/images/exchange.jpg";
-import { useContext } from "react"; // Import useEffect and useState
+import { useContext, useEffect } from "react"; // Import useEffect and useState
 import { CurrencyContext } from "./context/CurrencyContext";
 import { useQuery } from "react-query";
 import { fetchCurrencyConversion } from "./api";
@@ -44,6 +50,13 @@ function App() {
     localStorage.setItem("selectedToCountry", JSON.stringify(value));
   };
 
+  useEffect(() => {
+    const storedFromCountry = localStorage.getItem("selectedFromCountry");
+    const storedToCountry = localStorage.getItem("selectedToCountry");
+    setFromCurrency(storedFromCountry ? JSON.parse(storedFromCountry) : null);
+    setToCurrency(storedToCountry ? JSON.parse(storedToCountry) : null);
+  }, []);
+
   return (
     <Container maxWidth="md">
       <Box sx={boxStyles}>
@@ -53,13 +66,21 @@ function App() {
         <Grid container spacing={2}>
           <InputAmount />
           <SelectCountry
-            value={fromCurrency}
+            value={
+              localStorage.getItem("selectedFromCountry")
+                ? JSON.parse(localStorage.getItem("selectedFromCountry"))
+                : fromCurrency
+            }
             setValue={handleSetFromCurrency}
             label="from"
           />
           <SwitchCurrency />
           <SelectCountry
-            value={toCurrency}
+            value={
+              localStorage.getItem("selectedToCountry")
+                ? JSON.parse(localStorage.getItem("selectedToCountry"))
+                : toCurrency
+            }
             setValue={handleSetToCurrency}
             label="to"
           />
