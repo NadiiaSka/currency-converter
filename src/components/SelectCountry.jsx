@@ -6,15 +6,7 @@ import { useEffect, useState } from "react";
 const SelectCountry = (props) => {
   const { value, setValue, label } = props;
   //next step is to implement using previous value on reload
-  const [previousValue, setPreviousValue] = useState(null);
   const fetchData = useAxios();
-
-  useEffect(() => {
-    const savedValue = localStorage.getItem("selectedCountry");
-    if (savedValue) {
-      setPreviousValue(JSON.parse(savedValue));
-    }
-  }, []);
 
   const { data, isLoading, isError } = useQuery("countries", () =>
     fetchData("https://restcountries.com/v3.1/all").then((data) => {
@@ -42,12 +34,6 @@ const SelectCountry = (props) => {
       return data;
     })
   );
-
-  useEffect(() => {
-    if (value) {
-      localStorage.setItem("selectedCountry", JSON.stringify(value));
-    }
-  }, [value]);
 
   if (isLoading) {
     return <Grid item xs={12} md={3}></Grid>;
