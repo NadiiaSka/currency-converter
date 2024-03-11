@@ -3,7 +3,7 @@ import InputAmount from "./components/InputAmount";
 import SelectCountry from "./components/SelectCountry";
 import SwitchCurrency from "./components/SwitchCurrency";
 import backgroundImage from "./assets/images/exchange.jpg";
-import { useContext } from "react";
+import { useContext } from "react"; // Import useEffect and useState
 import { CurrencyContext } from "./context/CurrencyContext";
 import { useQuery } from "react-query";
 import { fetchCurrencyConversion } from "./api";
@@ -34,6 +34,16 @@ function App() {
         : Promise.resolve(null)
   );
 
+  const handleSetFromCurrency = (value) => {
+    setFromCurrency(value);
+    localStorage.setItem("selectedFromCountry", JSON.stringify(value));
+  };
+
+  const handleSetToCurrency = (value) => {
+    setToCurrency(value);
+    localStorage.setItem("selectedToCountry", JSON.stringify(value));
+  };
+
   return (
     <Container maxWidth="md">
       <Box sx={boxStyles}>
@@ -44,13 +54,13 @@ function App() {
           <InputAmount />
           <SelectCountry
             value={fromCurrency}
-            setValue={setFromCurrency}
+            setValue={handleSetFromCurrency}
             label="from"
           />
           <SwitchCurrency />
           <SelectCountry
             value={toCurrency}
-            setValue={setToCurrency}
+            setValue={handleSetToCurrency}
             label="to"
           />
         </Grid>

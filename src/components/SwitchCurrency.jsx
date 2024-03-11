@@ -8,6 +8,10 @@ const SwitchCurrency = () => {
     useContext(CurrencyContext);
 
   const handleSwitch = () => {
+    // Update local storage values
+    localStorage.setItem("selectedFromCountry", JSON.stringify(toCurrency));
+    localStorage.setItem("selectedToCountry", JSON.stringify(fromCurrency));
+
     setFromCurrency(toCurrency);
     setToCurrency(fromCurrency);
   };
