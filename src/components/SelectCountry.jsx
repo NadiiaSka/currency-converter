@@ -1,11 +1,17 @@
 import { Autocomplete, Box, Grid, TextField } from "@mui/material";
 import useAxios from "../hooks/useAxios";
 import { useQuery } from "react-query";
+import PropTypes from "prop-types";
 
 const SelectCountry = (props) => {
   const { value, setValue, label } = props;
 
-  //next step is to implement using previous value on reload
+  SelectCountry.propTypes = {
+    value: PropTypes.object,
+    setValue: PropTypes.func.isRequired,
+    label: PropTypes.string.isRequired,
+  };
+
   const fetchData = useAxios();
 
   const { data, isLoading, isError } = useQuery("countries", () =>
@@ -83,10 +89,17 @@ const SelectCountry = (props) => {
           >
             <img
               loading="lazy"
-              width="20"
-              srcSet={option.flags.png}
               src={option.flags.png}
               alt=""
+              style={{
+                width: "24px",
+                height: "16px",
+                objectFit: "cover",
+                marginRight: "8px",
+                marginLeft: "-8px",
+                borderRadius: "2px",
+                display: "inline-block",
+              }}
             />
             {Object.keys(option.currencies)[0]} - {option.name.common}
           </Box>
@@ -104,7 +117,13 @@ const SelectCountry = (props) => {
                   srcSet={value.flags.png}
                   src={value.flags.png}
                   alt=""
-                  style={{ marginRight: "8px" }}
+                  style={{
+                    width: "24px",
+                    height: "16px",
+                    marginRight: "8px",
+                    marginLeft: "4px",
+                    borderRadius: "2px",
+                  }}
                 />
               ) : null,
             }}
