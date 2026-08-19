@@ -1,7 +1,6 @@
 import { Autocomplete, Box, Grid, TextField } from "@mui/material";
 import { useQuery } from "react-query";
 import PropTypes from "prop-types";
-import countries from "world-countries";
 
 const POPULAR_COUNTRY_ORDER = {
   "United States": 1,
@@ -78,9 +77,13 @@ const SelectCountry = (props) => {
     label: PropTypes.string.isRequired,
   };
 
-  const { data, isLoading, isError } = useQuery("countries", async () =>
-    sortCountries(countries.map(normalizeCountry).filter(isCompleteCountry)),
-  );
+  const { data, isLoading, isError } = useQuery("countries", async () => {
+    const { default: countries } = await import("world-countries");
+
+    return sortCountries(
+      countries.map(normalizeCountry).filter(isCompleteCountry),
+    );
+  });
 
   if (isLoading) {
     return <Grid item xs={12} md={3}></Grid>;
@@ -99,13 +102,6 @@ const SelectCountry = (props) => {
           dataFilter.some((option) => option.name.common === value.name.common)
             ? value
             : null
-        }
-        groupBy={(option) =>
-          ["United States", "United Kingdom", "New Zealand"].includes(
-            option.name.common,
-          )
-            ? "Popular"
-            : "All Countries"
         }
         disableClearable
         onChange={(event, newValue) => {
