@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Grid, TextField } from "@mui/material";
-import useAxios from "../hooks/useAxios";
 import { useQuery } from "react-query";
 import PropTypes from "prop-types";
+import countries from "world-countries";
 
 const POPULAR_COUNTRY_ORDER = {
   "United States": 1,
@@ -78,22 +78,9 @@ const SelectCountry = (props) => {
     label: PropTypes.string.isRequired,
   };
 
-  const fetchData = useAxios();
-
-  const { data, isLoading, isError } = useQuery("countries", async () => {
-    const responseData = await fetchData(
-      "https://cdn.jsdelivr.net/npm/world-countries@5.0.0/dist/countries.json",
-    );
-    const rawCountries = Array.isArray(responseData)
-      ? responseData
-      : Array.isArray(responseData?.data)
-        ? responseData.data
-        : [];
-
-    return sortCountries(
-      rawCountries.map(normalizeCountry).filter(isCompleteCountry),
-    );
-  });
+  const { data, isLoading, isError } = useQuery("countries", async () =>
+    sortCountries(countries.map(normalizeCountry).filter(isCompleteCountry)),
+  );
 
   if (isLoading) {
     return <Grid item xs={12} md={3}></Grid>;
