@@ -3,6 +3,65 @@ import useAxios from "../hooks/useAxios";
 import { useQuery } from "react-query";
 import PropTypes from "prop-types";
 
+const POPULAR_COUNTRY_ORDER = {
+  "United States": 1,
+  Australia: 2,
+  Ukraine: 3,
+};
+
+const normalizeCountry = (country) => {
+  const currencies = Array.isArray(country?.currencies)
+    ? country.currencies.reduce((acc, currency) => {
+        if (currency?.code) {
+          acc[currency.code] = {
+            name: currency.name || currency.code,
+            symbol: currency.symbol || "",
+          };
+        }
+        return acc;
+      }, {})
+    : country?.currencies && !Array.isArray(country.currencies)
+      ? country.currencies
+      : {};
+
+  return {
+    ...country,
+    name: country?.name || {
+      common: country?.names?.common || "",
+      official: country?.names?.official || country?.names?.common || "",
+    },
+    flags: country?.flags || {
+      png: country?.flag?.url_png || "",
+      svg: country?.flag?.url_svg || "",
+    },
+    currencies,
+    altSpellings: country?.altSpellings || [],
+  };
+};
+
+const getCurrencyCode = (country) =>
+  Object.keys(country?.currencies || {})[0] || "";
+
+const isCompleteCountry = (country) =>
+  Boolean(
+    country?.name?.common && country?.flags?.png && getCurrencyCode(country),
+  );
+
+const sortCountries = (countries) =>
+  [...countries].sort((a, b) => {
+    const orderA = POPULAR_COUNTRY_ORDER[a.name.common] || Infinity;
+    const orderB = POPULAR_COUNTRY_ORDER[b.name.common] || Infinity;
+
+    if (orderA !== orderB) {
+      return orderA - orderB;
+    }
+
+    return a.name.common.localeCompare(b.name.common);
+  });
+
+const extractCountriesFromResponse = (responseData) =>
+  Array.isArray(responseData?.data?.objects) ? responseData.data.objects : [];
+
 const SelectCountry = (props) => {
   const { value, setValue, label } = props;
 
@@ -14,34 +73,29 @@ const SelectCountry = (props) => {
 
   const fetchData = useAxios();
 
-  const { data, isLoading, isError } = useQuery("countries", () =>
-    fetchData(
-      "https://restcountries.com/v3.1/all?fields=name,flags,currencies,altSpellings"
-    ).then((data) => {
-      //Sort the list of countries to display the commonly used ones first
-      data.sort((a, b) => {
-        const order = {
-          "United States": 1,
-          "United Kingdom": 2,
-          "New Zealand": 3,
-        };
+  const { data, isLoading, isError } = useQuery("countries", async () => {
+    const pageSize = 100;
+    let offset = 0;
+    let shouldContinue = true;
+    const rawCountries = [];
 
-        // Compare countries based on their order
-        const orderA = order[a.name.common] || Infinity;
-        const orderB = order[b.name.common] || Infinity;
+    while (shouldContinue) {
+      const responseData = await fetchData(
+        `/api/restcountries/countries/v5?limit=${pageSize}&offset=${offset}`,
+      );
 
-        // Sort countries based on their order
-        if (orderA !== orderB) {
-          return orderA - orderB;
-        } else {
-          // If countries have the same order, sort them alphabetically
-          return a.name.common.localeCompare(b.name.common);
-        }
-      });
+      const pageCountries = extractCountriesFromResponse(responseData);
+      const meta = responseData?.data?.meta;
 
-      return data;
-    })
-  );
+      rawCountries.push(...pageCountries);
+      shouldContinue = Boolean(meta?.more) && pageCountries.length > 0;
+      offset += meta?.count || pageCountries.length;
+    }
+
+    return sortCountries(
+      rawCountries.map(normalizeCountry).filter(isCompleteCountry),
+    );
+  });
 
   if (isLoading) {
     return <Grid item xs={12} md={3}></Grid>;
@@ -50,7 +104,7 @@ const SelectCountry = (props) => {
     return "Something went wrong!";
   }
 
-  const dataFilter = data.filter((item) => "currencies" in item);
+  const dataFilter = Array.isArray(data) ? data : [];
 
   return (
     <Grid item xs={12} md={4}>
@@ -63,7 +117,7 @@ const SelectCountry = (props) => {
         }
         groupBy={(option) =>
           ["United States", "United Kingdom", "New Zealand"].includes(
-            option.name.common
+            option.name.common,
           )
             ? "Popular"
             : "All Countries"
@@ -75,7 +129,7 @@ const SelectCountry = (props) => {
         options={dataFilter}
         getOptionLabel={(option) =>
           option?.name?.common
-            ? `${Object.keys(option.currencies)[0]} - ${option.name.common}`
+            ? `${getCurrencyCode(option)} - ${option.name.common}`
             : ""
         }
         isOptionEqualToValue={(option, value) =>
@@ -101,7 +155,7 @@ const SelectCountry = (props) => {
                 display: "inline-block",
               }}
             />
-            {Object.keys(option.currencies)[0]} - {option.name.common}
+            {getCurrencyCode(option)} - {option.name.common}
           </Box>
         )}
         renderInput={(params) => (
