@@ -3,7 +3,7 @@ import InputAmount from "./components/InputAmount";
 import SelectCountry from "./components/SelectCountry";
 import SwitchCurrency from "./components/SwitchCurrency";
 import backgroundImage from "./assets/images/exchange.jpg";
-import { useContext, useEffect } from "react"; // Import useEffect and useState
+import { useContext } from "react";
 import { CurrencyContext } from "./context/CurrencyContext";
 import { useQuery } from "react-query";
 import { fetchCurrencyConversion } from "./api";
@@ -24,32 +24,17 @@ function App() {
     ? Object.keys(toCurrency.currencies)[0]
     : null;
 
-  const shouldFetchData = codeFromCurrency && codeToCurrency && firstAmount;
+  const shouldFetchData = Boolean(
+    codeFromCurrency && codeToCurrency && firstAmount,
+  );
 
   const { data: resultCurrency } = useQuery(
     ["currencyConversion", codeFromCurrency, codeToCurrency, firstAmount],
-    () =>
-      shouldFetchData
-        ? fetchCurrencyConversion(codeFromCurrency, codeToCurrency, firstAmount)
-        : Promise.resolve(null)
+    () => fetchCurrencyConversion(codeFromCurrency, codeToCurrency, firstAmount),
+    {
+      enabled: shouldFetchData,
+    },
   );
-
-  const handleSetFromCurrency = (value) => {
-    setFromCurrency(value);
-    localStorage.setItem("selectedFromCountry", JSON.stringify(value));
-  };
-
-  const handleSetToCurrency = (value) => {
-    setToCurrency(value);
-    localStorage.setItem("selectedToCountry", JSON.stringify(value));
-  };
-
-  useEffect(() => {
-    const storedFromCountry = localStorage.getItem("selectedFromCountry");
-    const storedToCountry = localStorage.getItem("selectedToCountry");
-    setFromCurrency(storedFromCountry ? JSON.parse(storedFromCountry) : null);
-    setToCurrency(storedToCountry ? JSON.parse(storedToCountry) : null);
-  }, []);
 
   return (
     <Container maxWidth="md">
@@ -60,22 +45,14 @@ function App() {
         <Grid container spacing={2}>
           <InputAmount />
           <SelectCountry
-            value={
-              localStorage.getItem("selectedFromCountry")
-                ? JSON.parse(localStorage.getItem("selectedFromCountry"))
-                : fromCurrency
-            }
-            setValue={handleSetFromCurrency}
+            value={fromCurrency}
+            setValue={setFromCurrency}
             label="from"
           />
           <SwitchCurrency />
           <SelectCountry
-            value={
-              localStorage.getItem("selectedToCountry")
-                ? JSON.parse(localStorage.getItem("selectedToCountry"))
-                : toCurrency
-            }
-            setValue={handleSetToCurrency}
+            value={toCurrency}
+            setValue={setToCurrency}
             label="to"
           />
         </Grid>
