@@ -24,16 +24,26 @@ const normalizeCountry = (country) => {
       ? country.currencies
       : {};
 
+  const countryCode = (
+    country?.cca2 ||
+    country?.codes?.alpha_2 ||
+    ""
+  ).toLowerCase();
+
   return {
     ...country,
     name: country?.name || {
       common: country?.names?.common || "",
       official: country?.names?.official || country?.names?.common || "",
     },
-    flags: country?.flags || {
-      png: country?.flag?.url_png || "",
-      svg: country?.flag?.url_svg || "",
-    },
+    flags:
+      country?.flags ||
+      (countryCode
+        ? {
+            png: `https://flagcdn.com/w40/${countryCode}.png`,
+            svg: `https://flagcdn.com/${countryCode}.svg`,
+          }
+        : { png: "", svg: "" }),
     currencies,
     altSpellings: country?.altSpellings || [],
   };
@@ -59,9 +69,6 @@ const sortCountries = (countries) =>
     return a.name.common.localeCompare(b.name.common);
   });
 
-const extractCountriesFromResponse = (responseData) =>
-  Array.isArray(responseData?.data?.objects) ? responseData.data.objects : [];
-
 const SelectCountry = (props) => {
   const { value, setValue, label } = props;
 
@@ -74,23 +81,14 @@ const SelectCountry = (props) => {
   const fetchData = useAxios();
 
   const { data, isLoading, isError } = useQuery("countries", async () => {
-    const pageSize = 100;
-    let offset = 0;
-    let shouldContinue = true;
-    const rawCountries = [];
-
-    while (shouldContinue) {
-      const responseData = await fetchData(
-        `/api/restcountries/countries/v5?limit=${pageSize}&offset=${offset}`,
-      );
-
-      const pageCountries = extractCountriesFromResponse(responseData);
-      const meta = responseData?.data?.meta;
-
-      rawCountries.push(...pageCountries);
-      shouldContinue = Boolean(meta?.more) && pageCountries.length > 0;
-      offset += meta?.count || pageCountries.length;
-    }
+    const responseData = await fetchData(
+      "https://cdn.jsdelivr.net/npm/world-countries@5.0.0/dist/countries.json",
+    );
+    const rawCountries = Array.isArray(responseData)
+      ? responseData
+      : Array.isArray(responseData?.data)
+        ? responseData.data
+        : [];
 
     return sortCountries(
       rawCountries.map(normalizeCountry).filter(isCompleteCountry),
