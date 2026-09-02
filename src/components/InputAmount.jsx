@@ -31,29 +31,29 @@ const InputAmount = () => {
   );
 };
 
-const NumericFormatCustom = forwardRef(function NumericFormatCustom(
-  props,
-  ref
-) {
-  const { onChange, ...other } = props;
+const NumericFormatCustom = forwardRef(
+  function NumericFormatCustom(props, ref) {
+    const { onChange, ...other } = props;
 
-  return (
-    <NumericFormat
-      {...other}
-      getInputRef={ref}
-      onValueChange={(values) => {
-        onChange({
-          target: {
-            name: props.name,
-            value: values.value,
-          },
-        });
-      }}
-      thousandSeparator
-      valueIsNumericString
-    />
-  );
-});
+    return (
+      <NumericFormat
+        {...other}
+        getInputRef={ref}
+        allowNegative={false}
+        onValueChange={(values) => {
+          onChange({
+            target: {
+              name: props.name,
+              value: values.value,
+            },
+          });
+        }}
+        thousandSeparator
+        valueIsNumericString
+      />
+    );
+  },
+);
 
 NumericFormatCustom.propTypes = {
   name: PropTypes.string.isRequired,
