@@ -14,7 +14,11 @@ const SwitchCurrency = () => {
 
   return (
     <Grid item xs={12} md="auto">
-      <Button onClick={handleSwitch} sx={{ borderRadius: 1, height: "100%" }}>
+      <Button
+        aria-label="Switch currencies"
+        onClick={handleSwitch}
+        sx={{ borderRadius: 1, height: "100%" }}
+      >
         <CompareArrowsIcon sx={{ fontSize: 30 }} />
       </Button>
     </Grid>
