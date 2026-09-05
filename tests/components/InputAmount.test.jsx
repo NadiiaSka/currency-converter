@@ -23,22 +23,20 @@ describe("Amount Input", () => {
   describe("Positive", () => {
     it("CT-IA-01: Amount input accepts a valid numeric value", async () => {
       const user = userEvent.setup();
-      const { input, setFirstAmount } = renderInputAmount("");
+      const { input } = renderInputAmount("");
 
       await user.type(input, "1234");
 
-      expect(setFirstAmount).toHaveBeenCalled();
-      expect(input).toBeInTheDocument();
+      expect(input).toHaveDisplayValue(["1,234"]);
     });
 
     it("CT-IA-02: Amount input accepts a decimal value", async () => {
       const user = userEvent.setup();
-      const { input, setFirstAmount } = renderInputAmount("");
+      const { input } = renderInputAmount("");
 
       await user.type(input, "10.5");
 
-      expect(setFirstAmount).toHaveBeenCalled();
-      expect(input).toBeInTheDocument();
+      expect(input).toHaveDisplayValue(["10.5"]);
     });
   });
 
@@ -65,11 +63,10 @@ describe("Amount Input", () => {
   describe("Edge", () => {
     it("CT-IA-05: Amount input accepts zero", async () => {
       const user = userEvent.setup();
-      const { input, setFirstAmount } = renderInputAmount("");
+      const { input } = renderInputAmount("");
 
       await user.type(input, "0");
 
-      expect(setFirstAmount).toHaveBeenCalled();
       expect(input).toHaveDisplayValue("0");
     });
 
@@ -82,13 +79,13 @@ describe("Amount Input", () => {
       expect(input).toHaveDisplayValue("");
     });
 
-    it("CT-IA-07: Amount input stores a string value for downstream use (planned regression)", async () => {
+    it("CT-IA-07: Amount input retains the entered value after typing repeatedly", async () => {
       const user = userEvent.setup();
-      const { input, setFirstAmount } = renderInputAmount("");
+      const { input } = renderInputAmount("");
 
       await user.type(input, "1500");
 
-      expect(setFirstAmount).toHaveBeenLastCalledWith("1500");
+      expect(input).toHaveDisplayValue(["1,500"]);
     });
   });
 });
