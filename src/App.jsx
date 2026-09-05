@@ -28,9 +28,10 @@ function App() {
     codeFromCurrency && codeToCurrency && firstAmount,
   );
 
-  const { data: resultCurrency } = useQuery(
+  const { data: resultCurrency, isError } = useQuery(
     ["currencyConversion", codeFromCurrency, codeToCurrency, firstAmount],
-    () => fetchCurrencyConversion(codeFromCurrency, codeToCurrency, firstAmount),
+    () =>
+      fetchCurrencyConversion(codeFromCurrency, codeToCurrency, firstAmount),
     {
       enabled: shouldFetchData,
     },
@@ -56,14 +57,21 @@ function App() {
             label="to"
           />
         </Grid>
-        {firstAmount ? (
+        {isError ? (
+          <Box sx={{ marginTop: "1rem" }}>
+            <Typography variant="body1" color="error">
+              Something went wrong while fetching the conversion. Please try
+              again.
+            </Typography>
+          </Box>
+        ) : firstAmount ? (
           <Box
             sx={{ display: "flex", alignItems: "center", marginTop: "1rem" }}
           >
             <Typography variant="h5">
               {Number(firstAmount).toLocaleString()} {codeFromCurrency} =
             </Typography>
-            {resultCurrency && (
+            {resultCurrency !== undefined && resultCurrency !== null && (
               <Typography
                 variant="h5"
                 sx={{ marginLeft: "0.5rem", fontWeight: 600 }}

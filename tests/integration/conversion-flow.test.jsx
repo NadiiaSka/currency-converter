@@ -2,8 +2,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { http, HttpResponse } from "msw";
-import App from "../../App";
-import CurrencyProvider from "../../context/CurrencyContext";
+import App from "../../src/App";
+import CurrencyProvider from "../../src/context/CurrencyContext";
 import { server } from "../server";
 
 const renderApp = () => {
@@ -35,7 +35,7 @@ const selectCountry = async ({ label, optionName, user }) => {
   await user.click(option);
 };
 
-describe("conversion errors", () => {
+describe("currency flow", () => {
   beforeEach(() => {
     window.localStorage.clear();
   });
@@ -45,15 +45,8 @@ describe("conversion errors", () => {
     window.localStorage.clear();
   });
 
-  it("IT-ERR-01: shows a safe fallback error message when the API fails", async () => {
+  it("IT-FLOW-01: converts a valid amount when both currencies are selected", async () => {
     const user = userEvent.setup();
-
-    server.use(
-      http.get("https://api.fxratesapi.com/latest", () =>
-        HttpResponse.json({ error: "Conversion failed" }, { status: 500 }),
-      ),
-    );
-
     renderApp();
 
     const amountInput = screen.getByRole("textbox", { name: /amount/i });
@@ -72,25 +65,17 @@ describe("conversion errors", () => {
     });
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/something went wrong while fetching the conversion/i),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/100 USD/i)).toBeInTheDocument();
+      expect(screen.getByText(/3,820 UAH/i)).toBeInTheDocument();
     });
   });
 
-  it("IT-ERR-02: shows a safe fallback when the API returns a malformed response", async () => {
+  it("IT-FLOW-02: accepts zero as a valid amount and shows a zero conversion result", async () => {
     const user = userEvent.setup();
-
-    server.use(
-      http.get("https://api.fxratesapi.com/latest", () =>
-        HttpResponse.json({ message: "ok" }, { status: 200 }),
-      ),
-    );
-
     renderApp();
 
     const amountInput = screen.getByRole("textbox", { name: /amount/i });
-    await user.type(amountInput, "100");
+    await user.type(amountInput, "0");
 
     await selectCountry({
       label: /from/i,
@@ -105,19 +90,50 @@ describe("conversion errors", () => {
     });
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/something went wrong while fetching the conversion/i),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/0 USD/i)).toBeInTheDocument();
+      expect(screen.getByText(/0 UAH/i)).toBeInTheDocument();
     });
   });
 
-  it("IT-ERR-03: shows a safe fallback when the API request is rejected", async () => {
+  it("IT-FLOW-03: does not trigger a conversion if the amount is empty", async () => {
     const user = userEvent.setup();
+    renderApp();
 
-    server.use(
-      http.get("https://api.fxratesapi.com/latest", () => HttpResponse.error()),
-    );
+    await selectCountry({
+      label: /from/i,
+      optionName: "^USD - United States$",
+      user,
+    });
 
+    await selectCountry({
+      label: /to/i,
+      optionName: "^UAH - Ukraine$",
+      user,
+    });
+
+    expect(screen.queryByText(/=/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/\d+\s+UAH/i)).not.toBeInTheDocument();
+  });
+
+  it("IT-FLOW-04: does not show a conversion when one currency is missing", async () => {
+    const user = userEvent.setup();
+    renderApp();
+
+    const amountInput = screen.getByRole("textbox", { name: /amount/i });
+    await user.type(amountInput, "100");
+
+    await selectCountry({
+      label: /from/i,
+      optionName: "^USD - United States$",
+      user,
+    });
+
+    expect(screen.getByText(/100 USD/i)).toBeInTheDocument();
+    expect(screen.queryByText(/\d+\s+UAH/i)).not.toBeInTheDocument();
+  });
+
+  it("IT-FLOW-05: updates the conversion when the user switches the currency direction", async () => {
+    const user = userEvent.setup();
     renderApp();
 
     const amountInput = screen.getByRole("textbox", { name: /amount/i });
@@ -135,10 +151,13 @@ describe("conversion errors", () => {
       user,
     });
 
+    const switchButton = screen.getByRole("button", {
+      name: /switch currencies/i,
+    });
+    await user.click(switchButton);
+
     await waitFor(() => {
-      expect(
-        screen.getByText(/something went wrong while fetching the conversion/i),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/100 UAH/i)).toBeInTheDocument();
     });
   });
 });

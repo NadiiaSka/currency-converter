@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { CurrencyContext } from "../../context/CurrencyContext";
+import { CurrencyContext } from "../../src/context/CurrencyContext";
 import { defaultCurrencyState } from "./defaultCurrencyState";
 
 export const renderWithProviders = ({

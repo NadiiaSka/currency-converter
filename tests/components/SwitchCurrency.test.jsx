@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import SwitchCurrency from "../../components/SwitchCurrency";
+import SwitchCurrency from "../../src/components/SwitchCurrency";
 import { defaultCurrencyState } from "../fixtures/defaultCurrencyState";
 import { renderWithProviders } from "../fixtures/renderWithProviders";
 
