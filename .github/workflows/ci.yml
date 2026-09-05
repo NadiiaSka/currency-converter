@@ -24,7 +24,7 @@ jobs:
         run: npm ci
 
       - name: Run component tests
-        run: npx vitest run tests/components --reporter=default --reporter=basic
+        run: npx vitest run tests/components --reporter=default
 
       - name: Write component test summary
         if: always()
@@ -54,7 +54,7 @@ jobs:
         run: npm ci
 
       - name: Run integration tests
-        run: npx vitest run tests/integration --reporter=default --reporter=basic
+        run: npx vitest run tests/integration --reporter=default
 
       - name: Write integration test summary
         if: always()
