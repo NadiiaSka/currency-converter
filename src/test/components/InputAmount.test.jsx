@@ -21,7 +21,7 @@ const renderInputAmount = (initialValue = "") => {
 
 describe("Amount Input", () => {
   describe("Positive", () => {
-    it("CT-AM-01: Amount input accepts a valid numeric value", async () => {
+    it("CT-IA-01: Amount input accepts a valid numeric value", async () => {
       const user = userEvent.setup();
       const { input, setFirstAmount } = renderInputAmount("");
 
@@ -31,7 +31,7 @@ describe("Amount Input", () => {
       expect(input).toBeInTheDocument();
     });
 
-    it("CT-AM-02: Amount input accepts a decimal value", async () => {
+    it("CT-IA-02: Amount input accepts a decimal value", async () => {
       const user = userEvent.setup();
       const { input, setFirstAmount } = renderInputAmount("");
 
@@ -43,7 +43,7 @@ describe("Amount Input", () => {
   });
 
   describe("Negative", () => {
-    it("CT-AM-03: Amount input rejects invalid characters", async () => {
+    it("CT-IA-03: Amount input rejects invalid characters", async () => {
       const user = userEvent.setup();
       const { input } = renderInputAmount("");
 
@@ -52,7 +52,7 @@ describe("Amount Input", () => {
       expect(input).toHaveDisplayValue("");
     });
 
-    it("CT-AM-04: Amount input rejects negative values", async () => {
+    it("CT-IA-04: Amount input rejects negative values", async () => {
       const user = userEvent.setup();
       const { input } = renderInputAmount("");
 
@@ -63,7 +63,7 @@ describe("Amount Input", () => {
   });
 
   describe("Edge", () => {
-    it("CT-AM-05: Amount input accepts zero", async () => {
+    it("CT-IA-05: Amount input accepts zero", async () => {
       const user = userEvent.setup();
       const { input, setFirstAmount } = renderInputAmount("");
 
@@ -73,7 +73,7 @@ describe("Amount Input", () => {
       expect(input).toHaveDisplayValue("0");
     });
 
-    it("CT-AM-06: Amount input keeps empty state when cleared", async () => {
+    it("CT-IA-06: Amount input keeps empty state when cleared", async () => {
       const user = userEvent.setup();
       const { input } = renderInputAmount("500");
 
@@ -82,7 +82,7 @@ describe("Amount Input", () => {
       expect(input).toHaveDisplayValue("");
     });
 
-    it("CT-AM-07: Amount input stores a string value for downstream use (planned regression)", async () => {
+    it("CT-IA-07: Amount input stores a string value for downstream use (planned regression)", async () => {
       const user = userEvent.setup();
       const { input, setFirstAmount } = renderInputAmount("");
 
