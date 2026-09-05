@@ -79,13 +79,13 @@ describe("currency flow", () => {
 
     await selectCountry({
       label: /from/i,
-      optionName: "^USD - United States$",
+      optionName: "^UAH - Ukraine$",
       user,
     });
 
     await selectCountry({
       label: /to/i,
-      optionName: "^UAH - Ukraine$",
+      optionName: "^USD - United States$",
       user,
     });
 
