@@ -6,8 +6,8 @@ on:
   pull_request:
 
 jobs:
-  vitest:
-    name: Vitest component + integration tests
+  component-tests:
+    name: Component tests
     runs-on: ubuntu-latest
 
     steps:
@@ -23,8 +23,28 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Vitest
-        run: npm run test:run
+      - name: Run component tests
+        run: npx vitest run tests/components
+
+  integration-tests:
+    name: Integration tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run integration tests
+        run: npx vitest run tests/integration
 
   playwright:
     name: Playwright E2E tests
