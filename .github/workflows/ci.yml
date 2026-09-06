@@ -26,16 +26,6 @@ jobs:
       - name: Run component tests
         run: npx vitest run tests/components --reporter=default
 
-      - name: Write component test summary
-        if: always()
-        run: |
-          echo "## Component test summary" >> "$GITHUB_STEP_SUMMARY"
-          if [ "${{ job.status }}" = "success" ]; then
-            echo "- Status: ✅ Pass" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "- Status: ❌ Fail" >> "$GITHUB_STEP_SUMMARY"
-          fi
-
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-latest
@@ -55,16 +45,6 @@ jobs:
 
       - name: Run integration tests
         run: npx vitest run tests/integration --reporter=default
-
-      - name: Write integration test summary
-        if: always()
-        run: |
-          echo "## Integration test summary" >> "$GITHUB_STEP_SUMMARY"
-          if [ "${{ job.status }}" = "success" ]; then
-            echo "- Status: ✅ Pass" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "- Status: ❌ Fail" >> "$GITHUB_STEP_SUMMARY"
-          fi
 
   playwright:
     name: Playwright E2E tests
@@ -88,17 +68,6 @@ jobs:
 
       - name: Run Playwright tests
         run: npx playwright test tests/e2e/currency-conversion.spec.js --reporter=line
-
-      - name: Write Playwright summary
-        if: always()
-        run: |
-          echo "## Playwright E2E summary" >> "$GITHUB_STEP_SUMMARY"
-          if [ "${{ job.status }}" = "success" ]; then
-            echo "- Status: ✅ Pass" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "- Status: ❌ Fail" >> "$GITHUB_STEP_SUMMARY"
-            echo "- Artifacts: [Download screenshots and report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> "$GITHUB_STEP_SUMMARY"
-          fi
 
       - name: Upload Playwright screenshots on failure
         if: failure()
