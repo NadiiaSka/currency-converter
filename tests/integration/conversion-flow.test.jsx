@@ -95,7 +95,46 @@ describe("currency flow", () => {
     });
   });
 
-  it("IT-FLOW-03: does not trigger a conversion if the amount is empty", async () => {
+  it("IT-FLOW-03: returns zero when converting zero from a smaller currency to a larger one", async () => {
+    const user = userEvent.setup();
+
+    server.use(
+      http.get("https://api.fxratesapi.com/latest", () =>
+        HttpResponse.json(
+          {
+            rates: {
+              USD: 0.02,
+            },
+          },
+          { status: 200 },
+        ),
+      ),
+    );
+
+    renderApp();
+
+    const amountInput = screen.getByRole("textbox", { name: /amount/i });
+    await user.type(amountInput, "0");
+
+    await selectCountry({
+      label: /from/i,
+      optionName: "^UAH - Ukraine$",
+      user,
+    });
+
+    await selectCountry({
+      label: /to/i,
+      optionName: "^USD - United States$",
+      user,
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/0 UAH/i)).toBeInTheDocument();
+      expect(screen.getByText(/0 USD/i)).toBeInTheDocument();
+    });
+  });
+
+  it("IT-FLOW-04: does not trigger a conversion if the amount is empty", async () => {
     const user = userEvent.setup();
     renderApp();
 
@@ -115,7 +154,7 @@ describe("currency flow", () => {
     expect(screen.queryByText(/\d+\s+UAH/i)).not.toBeInTheDocument();
   });
 
-  it("IT-FLOW-04: does not show a conversion when one currency is missing", async () => {
+  it("IT-FLOW-05: does not show a conversion when one currency is missing", async () => {
     const user = userEvent.setup();
     renderApp();
 
