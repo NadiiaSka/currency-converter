@@ -24,8 +24,13 @@ function App() {
     ? Object.keys(toCurrency.currencies)[0]
     : null;
 
+  const hasValidAmount =
+    firstAmount !== null && firstAmount !== undefined && firstAmount !== "";
   const shouldFetchData = Boolean(
-    codeFromCurrency && codeToCurrency && firstAmount,
+    codeFromCurrency &&
+    codeToCurrency &&
+    hasValidAmount &&
+    Number(firstAmount) !== 0,
   );
 
   const { data: resultCurrency, isError } = useQuery(
@@ -64,21 +69,28 @@ function App() {
               again.
             </Typography>
           </Box>
-        ) : firstAmount ? (
+        ) : hasValidAmount ? (
           <Box
             sx={{ display: "flex", alignItems: "center", marginTop: "1rem" }}
           >
             <Typography variant="h5">
               {Number(firstAmount).toLocaleString()} {codeFromCurrency} =
             </Typography>
-            {resultCurrency !== undefined && resultCurrency !== null && (
+            {Number(firstAmount) === 0 ? (
+              <Typography
+                variant="h5"
+                sx={{ marginLeft: "0.5rem", fontWeight: 600 }}
+              >
+                0 {codeToCurrency}
+              </Typography>
+            ) : resultCurrency !== undefined && resultCurrency !== null ? (
               <Typography
                 variant="h5"
                 sx={{ marginLeft: "0.5rem", fontWeight: 600 }}
               >
                 {Number(resultCurrency).toLocaleString()} {codeToCurrency}
               </Typography>
-            )}
+            ) : null}
           </Box>
         ) : (
           ""
