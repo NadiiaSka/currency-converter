@@ -1,4 +1,4 @@
-# Currency Converter Application
+# Playwright Automation Fraimework
 
 The Currency Converter application allows users to convert currencies from around the world at current exchange rates.
 
@@ -6,7 +6,7 @@ The Currency Converter application allows users to convert currencies from aroun
 
 You can access the Currency Converter app here: https://currency-exchange-nadiia.netlify.app
 
-<img src="https://github.com/NadiiaSka/currency-converter/assets/82064570/1885a223-9726-406b-bbbc-2c7d8a25feaf" alt="Currency Converter App" width="400"/>
+<img src="https://github.com/NadiiaSka/playwright-automation-fraimework/assets/82064570/1885a223-9726-406b-bbbc-2c7d8a25feaf" alt="Currency Converter App" width="400"/>
 
 ## Built With
 
