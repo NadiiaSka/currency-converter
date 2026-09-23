@@ -1,22 +1,10 @@
-# Playwright Automation Fraimework
+# Playwright Automation Framework
 
-The Currency Converter application allows users to convert currencies from around the world at current exchange rates.
+A layered testing framework for a React currency converter app, focused on reliable UI validation, flow coverage, and browser-level regression checks.
 
-## Access the App
-
-You can access the Currency Converter app here: https://currency-exchange-nadiia.netlify.app
+Live app: https://currency-exchange-nadiia.netlify.app
 
 <img src="https://github.com/NadiiaSka/playwright-automation-fraimework/assets/82064570/1885a223-9726-406b-bbbc-2c7d8a25feaf" alt="Currency Converter App" width="400"/>
-
-## Built With
-
-- React
-- Material-UI
-
-## APIs Used
-
-- Rest Countries API : https://restcountries.com/v3.1/all - Used to fetch the list of countries.
-- FXRates API: https://api.fxratesapi.com/latest - Used to get the latest currency rates.
 
 ## Testing
 
@@ -25,8 +13,7 @@ The project uses a layered testing approach to keep the app reliable and easy to
 - Component and unit tests validate rendering, user interactions, and form logic.
 - Integration tests cover the main conversion flow and error handling.
 - End-to-end tests verify the app in a real browser.
-
-Coverage focuses on currency selection, amount input, conversion behavior, switching currencies, and failure states.
+  Coverage focuses on currency selection, amount input, conversion behavior, switching currencies, and failure states.
 
 Tools used:
 
@@ -38,54 +25,80 @@ The CI/CD pipeline is configured in GitHub Actions and runs automated checks on 
 
 ```mermaid
 flowchart TD
-    A[React App / Vite] --> B[Component tests]
-    A --> C[Integration tests]
-    A --> D[E2E browser tests]
+	A[React App / Vite] --> B[Component tests]
+	A --> C[Integration tests]
+	A --> D[E2E browser tests]
 
-    B --> E[Vitest + Testing Library]
-    C --> E
-    C --> F[MSW mock server]
-    D --> G[Playwright]
-    G --> H[real browser + local Vite server]
+	B --> E[Vitest + Testing Library]
+	C --> E
+	C --> F[MSW mock server]
+	D --> G[Playwright]
+	G --> H[real browser + local Vite server]
 ```
 
-### How to run tests locally
+## Application Stack
+
+- React + Vite
+- Material UI
+
+## Test Stack
+
+- Vitest
+- Testing Library
+- Playwright
+- MSW
+
+## Quick start
+
+[Repository](https://github.com/NadiiaSka/playwright-automation-fraimework)
+
+### Prerequisites
 
 ```bash
+node --version
+npm --version
+```
+
+Required:
+
+- Node.js 22 or higher
+- npm 8 or higher
+
+### Install
+
+```bash
+git clone https://github.com/NadiiaSka/playwright-automation-fraimework.git
+cd playwright-automation-fraimework
 npm install
+npx playwright install
 ```
 
-Run unit and component tests:
+### Run the full test suite
 
 ```bash
-npm run test -- --run
+npm run test:run
+npm run test:end-end
 ```
 
-Run integration tests:
+### Run against a specific browser
 
 ```bash
-npx vitest run tests/integration
+npm run test:chrome
+npm run test:firefox
+npm run test:webkit
+npm run test:cross-browser
 ```
 
-Run end-to-end tests:
+`test:cross-browser` runs the suite against Chromium, Firefox, and WebKit.
+
+### Run focused suites
 
 ```bash
-npx playwright test
+npm run test:component
+npm run test:integration
+npm run test:end-end
 ```
 
-## Available Scripts
+## App overview
 
-In the project directory, you can run:
-
-```bash
-npm install
-```
-
-Install All dependencies in this project
-
-```bash
-npm run dev
-```
-
-Runs the app in the development mode.
-Open http://127.0.0.1:5173 to view it in the browser.
+The app allows users to enter an amount, choose a source and target currency, switch the direction, and validate conversion results in a clean currency converter interface.
