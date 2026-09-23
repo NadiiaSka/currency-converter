@@ -67,7 +67,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
-        run: npx playwright test tests/e2e/currency-conversion.spec.js --project=chrome --reporter=line
+        run: npx playwright test tests/e2e --project=chrome --reporter=line
 
       - name: Upload Playwright screenshots on failure
         if: failure()

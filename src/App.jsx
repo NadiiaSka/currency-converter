@@ -43,7 +43,7 @@ function App() {
   );
 
   return (
-    <Container maxWidth="md">
+    <Container component="main" maxWidth="md">
       <Box sx={boxStyles}>
         <Typography variant="h5" sx={{ marginBottom: "2rem" }}>
           Currency Converter
