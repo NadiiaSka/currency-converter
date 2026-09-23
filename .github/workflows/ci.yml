@@ -67,14 +67,9 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
-        run: npx playwright test tests/visual --project=chrome --update-snapshots
-
-      - name: Upload Linux snapshots
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-visual-snapshots
-          path: tests/visual/*-snapshots/*-chrome-linux.png
-          if-no-files-found: ignore
+        run: npx playwright test tests/e2e --project=chrome --reporter=line
+      - name: Run Playwright visual tests
+        run: npx playwright test tests/visual --project=chrome --reporter=line
 
       - name: Upload Playwright screenshots on failure
         if: failure()
