@@ -12,6 +12,8 @@
     "test:run": "vitest run",
     "test:component": "vitest run tests/components",
     "test:integration": "vitest run tests/integration",
+    "test:visual": "playwright test tests/visual --project=chrome",
+    "test:visual:update": "playwright test tests/visual --project=chrome --update-snapshots",
     "test:end-end": "playwright test tests/e2e",
     "test:e2e": "playwright test",
     "test:chrome": "playwright test --project=chrome",
