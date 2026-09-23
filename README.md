@@ -37,12 +37,16 @@ Tools used:
 The CI/CD pipeline is configured in GitHub Actions and runs automated checks on push and pull request events.
 
 ```mermaid
-flowchart LR
-    A[Component tests] --> B[Integration tests]
-    B --> C[End-to-end tests]
-    D[GitHub Actions CI] --> A
-    D --> B
-    D --> C
+flowchart TD
+    A[React App / Vite] --> B[Component tests]
+    A --> C[Integration tests]
+    A --> D[E2E browser tests]
+
+    B --> E[Vitest + Testing Library]
+    C --> E
+    C --> F[MSW mock server]
+    D --> G[Playwright]
+    G --> H[real browser + local Vite server]
 ```
 
 ### How to run tests locally
