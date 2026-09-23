@@ -1,8 +1,11 @@
 # Playwright Automation Framework
 
-A layered testing framework for a React currency converter app, focused on reliable UI validation, flow coverage, and browser-level regression checks.
+A layered testing framework for a React full-stack app, focused on reliable UI validation, flow coverage, and browser-level regression checks.
 
-Live app: https://currency-exchange-nadiia.netlify.app
+## Preview
+
+Live app used as a test demo (React + Vite, Material UI):
+https://currency-exchange-nadiia.netlify.app
 
 <img src="https://github.com/NadiiaSka/playwright-automation-fraimework/assets/82064570/1885a223-9726-406b-bbbc-2c7d8a25feaf" alt="Currency Converter App" width="400"/>
 
