@@ -102,6 +102,25 @@ npm run test:integration
 npm run test:end-end
 ```
 
-## App overview
+## Environments
 
-The app allows users to enter an amount, choose a source and target currency, switch the direction, and validate conversion results in a clean currency converter interface.
+The app uses Vite modes to configure the exchange-rate API URL. The committed
+configuration files are `.env.ci` and `.env.production`; create `.env.local`
+from `.env.example` for developer-specific values. Do not commit API keys in
+any `VITE_` variable because Vite exposes them to the browser bundle.
+
+```bash
+# Local development
+npm run dev
+
+# CI verification build
+npm run build:ci
+
+# Production build
+npm run build:production
+```
+
+The GitHub Actions workflow builds and runs E2E tests using CI mode. A static
+production build is produced in `dist`; deploy it with the hosting provider of
+your choice. The Vite health endpoint is for development, CI, and preview only;
+a production API needs its own backend health endpoint.

@@ -1,11 +1,14 @@
 import axios from "axios";
 
+const exchangeRateUrl =
+  import.meta.env.VITE_EXCHANGE_RATE_URL ?? "https://api.fxratesapi.com/latest";
+
 export const fetchCurrencyConversion = async (
   codeFromCurrency,
   codeToCurrency,
-  firstAmount
+  firstAmount,
 ) => {
-  const response = await axios.get("https://api.fxratesapi.com/latest", {
+  const response = await axios.get(exchangeRateUrl, {
     params: {
       amount: firstAmount,
       base: codeFromCurrency,
