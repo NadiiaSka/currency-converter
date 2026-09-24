@@ -66,6 +66,7 @@ test.describe("Currency converter end-to-end flow", () => {
       /USD/i,
     );
     await expect(page.getByText(/100 UAH/i)).toBeVisible();
+    await expect(page.getByText(/2\.62.*USD/i)).toBeVisible();
   });
 
   test("accepts zero as a valid value and shows a zero conversion result", async ({
