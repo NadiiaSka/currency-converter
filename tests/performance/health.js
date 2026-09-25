@@ -22,7 +22,10 @@ export default function () {
 
   check(response, {
     "returns HTTP 200": (result) => result.status === 200,
-    "returns healthy status": (result) => result.json("status") === "ok",
+    "returns healthy status": (result) =>
+      result.status === 200 &&
+      result.body !== null &&
+      result.json("status") === "ok",
   });
 
   sleep(1);
