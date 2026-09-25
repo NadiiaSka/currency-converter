@@ -83,3 +83,46 @@ jobs:
             playwright-report/
             test-results/
           if-no-files-found: ignore
+
+  performance:
+    name: k6 performance tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start CI server
+        shell: bash
+        run: |
+          npm run dev:ci -- --host 127.0.0.1 --port 5173 > vite.log 2>&1 &
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:5173/api/health > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat vite.log
+          exit 1
+
+      - name: Run k6 health load test
+        uses: grafana/k6-action@v0.3.1
+        with:
+          filename: tests/performance/health.js
+
+      - name: Upload Vite log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-vite-log
+          path: vite.log
+          if-no-files-found: ignore

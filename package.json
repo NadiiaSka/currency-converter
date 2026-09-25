@@ -22,7 +22,8 @@
     "test:chrome": "playwright test --project=chrome",
     "test:firefox": "playwright test --project=firefox",
     "test:webkit": "playwright test --project=webkit",
-    "test:cross-browser": "playwright test"
+    "test:cross-browser": "playwright test",
+    "test:performance:health": "k6 run tests/performance/health.js"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",

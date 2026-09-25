@@ -50,6 +50,7 @@ flowchart TD
 - Testing Library
 - Playwright
 - MSW
+- k6
 
 ## Quick start
 
@@ -81,6 +82,30 @@ npx playwright install
 ```bash
 npm run test:run
 npm run test:end-end
+```
+
+### Run the health performance test
+
+Install [k6](https://grafana.com/docs/k6/latest/set-up/install-k6/) and start
+the local application in a separate terminal:
+
+```bash
+npm run dev
+```
+
+Then run the health check load test. It runs five virtual users for 30 seconds
+and fails when the HTTP error rate is at least 1% or the 95th percentile response
+time is 200 ms or slower.
+
+```bash
+npm run test:performance:health
+```
+
+To target another environment, set `BASE_URL` before running k6. PowerShell:
+
+```powershell
+$env:BASE_URL = "https://example.com"
+npm run test:performance:health
 ```
 
 ### Run against a specific browser
